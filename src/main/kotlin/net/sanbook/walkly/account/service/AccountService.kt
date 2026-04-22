@@ -8,6 +8,7 @@ import net.sanbook.walkly.account.repository.AccountRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @Service
 class AccountService(
@@ -19,5 +20,9 @@ class AccountService(
         }
         val savedAccount = accountRepository.save(request.toEntity())
         return savedAccount.toResponse()
+    }
+
+    fun validateAccountExists(accountId: UUID) {
+        if (!accountRepository.existsById(accountId)) throw ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다.")
     }
 }
