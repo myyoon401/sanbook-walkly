@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.util.UUID
 
 @Service
 class DailyStepService(
@@ -26,5 +28,12 @@ class DailyStepService(
             ?: request.toEntity()
 
         return dailyStepRepository.save(dailyStep).toResponse()
+    }
+
+    fun getDailyStepByDate(accountId: UUID, date: LocalDate?): DailyStepResponse {
+        val searchDate = date ?: LocalDate.now()
+        val dailyStep = dailyStepRepository.findByAccountIdAndDate(accountId, searchDate)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "해당사용자의$searchDate 걸음수는 존재하지 않습니다.")
+        return dailyStep.toResponse()
     }
 }
