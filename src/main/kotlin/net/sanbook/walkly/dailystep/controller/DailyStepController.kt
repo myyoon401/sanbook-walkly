@@ -3,6 +3,7 @@ package net.sanbook.walkly.dailystep.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import net.sanbook.walkly.dailystep.data.DailyStepResponse
+import net.sanbook.walkly.dailystep.data.DailyStepSummaryResponse
 import net.sanbook.walkly.dailystep.data.UpsertDailyStepRequest
 import net.sanbook.walkly.dailystep.service.DailyStepService
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,6 +30,14 @@ class DailyStepController(
     @GetMapping("/accounts/{accountId}/daily-steps")
     fun getDailyStepByDate(
         @PathVariable accountId: UUID, @RequestParam date: LocalDate?): DailyStepResponse {
-        return dailyStepService.getDailyStepByDate(accountId, date)
+        return dailyStepService.getDailyStepByDate(accountId, date ?: LocalDate.now())
+    }
+
+    @Operation(summary = "특정 기간의 걸음수 통계", description = "특정 사용자와 특정 기간의 걸음수 통계를 조회한다.")
+    @GetMapping("/accounts/{accountId}/daily-steps/summary")
+    fun getDailyStepSummaryBetween(@PathVariable accountId: UUID,
+                                   @RequestParam from: LocalDate,
+                                   @RequestParam to: LocalDate): DailyStepSummaryResponse {
+        return dailyStepService.getDailyStepSummaryBetween(accountId, from, to)
     }
 }
