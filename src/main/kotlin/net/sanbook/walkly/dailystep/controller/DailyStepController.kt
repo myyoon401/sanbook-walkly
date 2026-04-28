@@ -2,10 +2,12 @@ package net.sanbook.walkly.dailystep.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import net.sanbook.walkly.dailystep.data.DailyStepRankingResponse
 import net.sanbook.walkly.dailystep.data.DailyStepResponse
 import net.sanbook.walkly.dailystep.data.DailyStepSummaryResponse
 import net.sanbook.walkly.dailystep.data.UpsertDailyStepRequest
 import net.sanbook.walkly.dailystep.service.DailyStepService
+import net.sanbook.walkly.dailystep.type.Period
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,5 +41,11 @@ class DailyStepController(
                                    @RequestParam from: LocalDate,
                                    @RequestParam to: LocalDate): DailyStepSummaryResponse {
         return dailyStepService.getDailyStepSummaryBetween(accountId, from, to)
+    }
+
+    @Operation(summary = "기간별 Top N 랭킹", description = "기간별 Top N 랭킹")
+    @GetMapping("/daily-steps/ranking")
+    fun getDailyStepRanking(@RequestParam period: Period, @RequestParam limit: Int): DailyStepRankingResponse {
+
     }
 }

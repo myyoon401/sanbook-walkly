@@ -8,4 +8,5 @@ import java.util.UUID
 interface DailyStepRepository : JpaRepository<DailyStep, Long> {
     fun findByAccountIdAndDate(accountId: UUID, date: LocalDate): DailyStep?
     fun findAllByAccountIdAndDateBetween(accountId: UUID, from: LocalDate, to: LocalDate): List<DailyStep>
+    fun findTopByDateBetween(limit: Int, from: LocalDate, to: LocalDate): List<DailyStep>
 }

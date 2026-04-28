@@ -1,14 +1,12 @@
 package net.sanbook.walkly.dailystep.service
 
 import net.sanbook.walkly.account.service.AccountService
-import net.sanbook.walkly.dailystep.data.DailyStepResponse
-import net.sanbook.walkly.dailystep.data.DailyStepSummaryDetail
-import net.sanbook.walkly.dailystep.data.DailyStepSummaryResponse
-import net.sanbook.walkly.dailystep.data.UpsertDailyStepRequest
+import net.sanbook.walkly.dailystep.data.*
 import net.sanbook.walkly.dailystep.entity.DailyStep
 import net.sanbook.walkly.dailystep.mapper.toEntity
 import net.sanbook.walkly.dailystep.mapper.toResponse
 import net.sanbook.walkly.dailystep.repository.DailyStepRepository
+import net.sanbook.walkly.dailystep.type.Period
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -64,5 +62,20 @@ class DailyStepService(
                 maxDay
             )
         }
+    }
+
+    fun getDailyStepRanking(period: Period, limit: Int): DailyStepRankingResponse {
+        val from: LocalDate = LocalDate.now()
+        val to: LocalDate
+
+        if(period == Period.TODAY) {
+            to = LocalDate.now()
+        } else if(period == Period.WEEK) {
+            to = LocalDate.now().plusDays(6)
+        } else {
+            to = LocalDate.now().plusDays(29)
+        }
+
+        dailyStepRepository.findTopByDateBetween(limit, from, to)
     }
 }
